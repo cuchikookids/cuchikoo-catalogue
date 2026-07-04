@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <title>Cuchi Koo Kids – Bulk Kids Wear Catalogue</title>
+  <meta name="description" content="Wholesale kids clothing catalogue by Cuchi Koo Kids. Minimum bulk quantities apply. Contact: +91 78271 56645" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --navy:   #050f33;
+      --blue:   #0a2472;
+      --mid:    #1565e8;
+      --sky:    #4da3ff;
+      --white:  #ffffff;
+      --gold:   #ffd54f;
+      --radius: 14px;
+      --shadow: 0 4px 20px rgba(5,15,51,0.18);
+    }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Segoe UI', system-ui, sans-serif;
+      background: var(--navy);
+      color: var(--white);
+      max-width: 480px;
+      margin: 0 auto;
+      min-height: 100vh;
+      box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    }
+
+    /* ── TICKER ── */
+    .ticker-wrap { background: linear-gradient(90deg,var(--mid),var(--sky)); overflow:hidden; padding:7px 0; white-space:nowrap; }
+    .ticker-track { display:inline-block; animation:scroll-ticker 28s linear infinite; }
+    .ticker-track:hover { animation-play-state:paused; }
+    @keyframes scroll-ticker { 0%{transform:translateX(0)} 100%{transform:translateX(-50%)} }
+    .ticker-item { display:inline-block; padding:0 24px; font-size:12.5px; font-weight:600; letter-spacing:.4px; }
+    .ticker-item a { color:var(--gold); text-decoration:none; }
+
+    /* ── HEADER ── */
+    header {
+      background: linear-gradient(160deg,var(--navy) 0%,var(--blue) 60%,#1a3a9e 100%);
+      padding: 18px 16px 20px;
+      border-bottom: 3px solid var(--sky);
+    }
+    .header-inner { display:flex; align-items:center; gap:12px; }
+    .logo-wrap {
+      flex-shrink:0; width:62px; height:62px; border-radius:50%;
+      background:var(--white); display:flex; align-items:center; justify-content:center;
+      border:3px solid var(--sky); overflow:hidden; animation:bob 3s ease-in-out infinite;
+    }
+    @keyframes bob { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-5px)} }
+    .logo-wrap img { width:100%; height:100%; object-fit:cover; }
+    .logo-ph { background:linear-gradient(135deg,#0a2472,#1565e8); color:#fff; font-size:18px; font-weight:800; text-align:center; line-height:1.2; width:100%; height:100%; display:flex; align-items:center; justify-content:center; flex-direction:column; }
+    .logo-text { font-size:22px; font-weight:800; line-height:1.15; }
+    .logo-text span { color:var(--sky); }
+    .logo-tagline { font-size:11px; color:#a8c8ff; margin-top:3px; font-style:italic; }
+    .bulk-badge { margin-top:10px; display:inline-block; background:linear-gradient(135deg,#e91e63,#ff5722); color:#fff; font-size:11px; font-weight:700; letter-spacing:1px; text-transform:uppercase; padding:5px 14px; border-radius:20px; }
+
+    /* ── ADMIN FAB ── */
+    .admin-fab {
+      position: fixed; bottom: 22px; right: calc(50% - 240px + 14px);
+      width: 54px; height: 54px; border-radius: 50%;
+      background: linear-gradient(135deg,#e91e63,#ff5722);
+      color: #fff; font-size: 24px; border: none; cursor: pointer;
+      box-shadow: 0 4px 18px rgba(233,30,99,.5);
+      display: flex; align-items:center; justify-content:center;
+      z-index: 800; transition: transform .2s;
+    }
+    .admin-fab:hover { transform: scale(1.1) rotate(45deg); }
+
+    /* ── ADMIN PANEL ── */
+    .admin-overlay {
+      display: none; position: fixed; inset: 0;
+      background: rgba(0,0,0,.7); z-index: 900;
+      align-items: flex-end; justify-content:center;
+    }
+    .admin-overlay.open { display: flex; }
+    .admin-sheet {
+      background: #0d1b4b;
+      border-radius: 20px 20px 0 0;
+      width: 100%; max-width: 480px;
+      max-height: 92vh; overflow-y: auto;
+      padding: 0 0 32px;
+      border-top: 3px solid var(--sky);
+    }
+    .admin-header {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 18px 16px 14px;
+      border-bottom: 1px solid rgba(255,255,255,.1);
+      position: sticky; top: 0; background: #0d1b4b; z-index: 1;
+    }
+    .admin-header h2 { font-size:16px; font-weight:800; color:var(--sky); }
+    .btn-close-admin { background:none; border:none; color:#fff; font-size:22px; cursor:pointer; line-height:1; }
+
+    /* tabs */
+    .admin-tabs { display:flex; gap:0; border-bottom:1px solid rgba(255,255,255,.1); }
+    .admin-tab {
+      flex:1; padding:12px 0; text-align:center; font-size:13px; font-weight:700;
+      cursor:pointer; color:#a8c8ff; border:none; background:none;
+      border-bottom:3px solid transparent; transition:all .2s;
+    }
+    .admin-tab.active { color:#fff; border-bottom-color:var(--sky); }
+
+    /* add form */
+    .admin-body { padding:16px; }
+    label { display:block; font-size:11px; font-weight:700; color:#a8c8ff; letter-spacing:.6px; text-transform:uppercase; margin-bottom:4px; margin-top:12px; }
+    label:first-child { margin-top:0; }
+    input, select, textarea {
+      width:100%; background:rgba(255,255,255,.08); border:1.5px solid rgba(255,255,255,.18);
+      border-radius:9px; color:#fff; font-size:14px; padding:10px 12px; outline:none;
+      font-family:inherit;
+    }
+    input::placeholder, textarea::placeholder { color:#6688cc; }
+    input:focus, select:focus, textarea:focus { border-color:var(--sky); background:rgba(255,255,255,.12); }
+    select option { background:#0d1b4b; }
+    .img-preview { width:100%; aspect-ratio:3/4; object-fit:cover; border-radius:10px; margin-top:8px; display:none; border:2px solid var(--sky); }
+    .btn-add {
+      display:block; width:100%; margin-top:18px;
+      padding:13px; background:linear-gradient(135deg,var(--mid),var(--sky));
+      color:#fff; font-size:15px; font-weight:700; border:none; border-radius:12px;
+      cursor:pointer; letter-spacing:.5px;
+    }
+    .btn-add:hover { opacity:.88; }
+    .add-success {
+      display:none; margin-top:12px; background:rgba(37,211,102,.15);
+      border:1px solid #25D366; border-radius:10px; padding:10px 14px;
+      color:#25D366; font-size:13px; font-weight:600; text-align:center;
+    }
+
+    /* manage list */
+    .manage-list { padding:12px 14px; display:flex; flex-direction:column; gap:10px; }
+    .manage-filter { display:flex; gap:8px; padding:12px 14px 0; }
+    .manage-filter select { flex:1; }
+    .manage-card {
+      background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12);
+      border-radius:12px; padding:12px; display:flex; align-items:center; gap:12px;
+    }
+    .manage-thumb {
+      width:50px; height:66px; border-radius:8px; object-fit:cover; flex-shrink:0;
+      background:linear-gradient(135deg,#1a3a9e,#1565e8);
+      display:flex; align-items:center; justify-content:center; font-size:22px;
+    }
+    .manage-thumb img { width:100%; height:100%; object-fit:cover; border-radius:8px; }
+    .manage-info { flex:1; min-width:0; }
+    .manage-name { font-size:13px; font-weight:700; color:#fff; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+    .manage-meta { font-size:11px; color:#a8c8ff; margin-top:2px; }
+    .manage-price { font-size:13px; font-weight:800; margin-top:3px; }
+    .btn-del {
+      background:rgba(233,30,99,.2); border:1px solid rgba(233,30,99,.5);
+      color:#ff4d8e; border-radius:8px; padding:7px 11px; font-size:13px;
+      cursor:pointer; flex-shrink:0; font-weight:700; transition:all .2s;
+    }
+    .btn-del:hover { background:rgba(233,30,99,.4); }
+    .manage-empty { text-align:center; color:#6688cc; padding:28px 0; font-size:14px; }
+
+    /* ── SECTION HEADS ── */
+    .section-head { display:flex; align-items:center; gap:10px; padding:18px 14px 10px; }
+    .section-head h2 { font-size:15px; font-weight:800; text-transform:uppercase; letter-spacing:1px; }
+    .section-head .pill { font-size:13px; font-weight:700; padding:3px 12px; border-radius:20px; white-space:nowrap; }
+    .divider { flex:1; height:2px; border-radius:2px; }
+    .section-empty { text-align:center; color:#4466aa; padding:16px; font-size:13px; }
+
+    /* ── GRID & CARDS ── */
+    .grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; padding:0 10px 4px; }
+    .card { border-radius:var(--radius); overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column; background:#fff; color:#111; }
+    .card-img-wrap { position:relative; width:100%; aspect-ratio:3/4; overflow:hidden; cursor:pointer; }
+    .card-img-wrap img { width:100%; height:100%; object-fit:cover; display:block; transition:transform .3s; }
+    .card-img-wrap:hover img { transform:scale(1.04); }
+    .card-ph { width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:38px; }
+    .watermark { position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+    .wm-text { position:absolute; font-size:11px; font-weight:900; color:rgba(0,0,0,.55); letter-spacing:1px; white-space:nowrap; text-transform:uppercase; }
+    .wm-text.t { top:18%; left:8%; transform:rotate(-30deg); }
+    .wm-text.m { top:48%; left:22%; transform:rotate(-30deg); }
+    .wm-text.b { top:72%; left:36%; transform:rotate(-30deg); }
+    .card-body { padding:8px 9px 10px; }
+    .card-name { font-size:12px; font-weight:700; color:#1a1a2e; line-height:1.3; margin-bottom:5px; }
+    .card-price { font-size:14px; font-weight:800; margin-bottom:7px; }
+    .btn-order { display:block; width:100%; padding:7px 0; background:linear-gradient(135deg,var(--mid),var(--sky)); color:#fff; font-size:12px; font-weight:700; text-align:center; border-radius:8px; text-decoration:none; letter-spacing:.5px; transition:opacity .2s; }
+    .btn-order:hover { opacity:.85; }
+
+    /* ── PRICE BAND COLOURS ── */
+    .band-90  .section-head h2,.band-90  .card-price { color:#e91e8c; }
+    .band-90  .pill,.band-90  .divider              { background:#e91e8c; color:#fff; }
+    .band-100 .section-head h2,.band-100 .card-price { color:#00897b; }
+    .band-100 .pill,.band-100 .divider              { background:#00897b; color:#fff; }
+    .band-105 .section-head h2,.band-105 .card-price { color:#7c3aed; }
+    .band-105 .pill,.band-105 .divider              { background:#7c3aed; color:#fff; }
+    .band-110 .section-head h2,.band-110 .card-price { color:#e65100; }
+    .band-110 .pill,.band-110 .divider              { background:#e65100; color:#fff; }
+
+    /* ── LIGHTBOX ── */
+    .lightbox { display:none; position:fixed; inset:0; background:rgba(0,0,0,.93); z-index:990; align-items:center; justify-content:center; padding:16px; }
+    .lightbox.active { display:flex; }
+    .lightbox img { max-width:100%; max-height:90vh; border-radius:10px; object-fit:contain; }
+    .lb-close { position:absolute; top:14px; right:18px; font-size:28px; color:#fff; cursor:pointer; background:none; border:none; }
+
+    /* ── FOOTER ── */
+    footer { background:linear-gradient(160deg,#051033,#0a2472); padding:26px 16px 90px; border-top:3px solid var(--sky); margin-top:18px; text-align:center; }
+    footer h3 { font-size:14px; color:var(--sky); font-weight:700; text-transform:uppercase; letter-spacing:1px; margin-bottom:16px; }
+    .contact-cards { display:flex; flex-direction:column; gap:10px; }
+    .contact-card { background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.12); border-radius:12px; padding:12px 14px; display:flex; align-items:center; gap:12px; text-align:left; }
+    .contact-icon { font-size:22px; flex-shrink:0; }
+    .contact-label { font-size:10px; color:#a8c8ff; text-transform:uppercase; letter-spacing:.8px; font-weight:600; }
+    .contact-value { font-size:14px; font-weight:700; color:#fff; text-decoration:none; }
+    .contact-value:hover { color:var(--sky); }
+    .footer-note { margin-top:20px; font-size:11px; color:#6688cc; line-height:1.6; }
+
+    @media (prefers-reduced-motion:reduce) { .ticker-track,.logo-wrap { animation:none; } }
+  </style>
+</head>
+<body>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item">🎀 Cuchi Koo Kids – Premium Kids Wear</span>
+    <span class="ticker-item">📞 <a href="tel:+917827156645">+91 78271 56645</a></span>
+    <span class="ticker-item">📸 <a href="https://www.instagram.com/cuchikoo.kids" target="_blank" rel="noopener">@cuchikoo.kids</a></span>
+    <span class="ticker-item">✨ Minimum bulk quantities apply</span>
+    <span class="ticker-item">👗 New arrivals every week!</span>
+    <span class="ticker-item">🎀 Cuchi Koo Kids – Premium Kids Wear</span>
+    <span class="ticker-item">📞 <a href="tel:+917827156645">+91 78271 56645</a></span>
+    <span class="ticker-item">📸 <a href="https://www.instagram.com/cuchikoo.kids" target="_blank" rel="noopener">@cuchikoo.kids</a></span>
+    <span class="ticker-item">✨ Minimum bulk quantities apply</span>
+    <span class="ticker-item">👗 New arrivals every week!</span>
+  </div>
+</div>
+
+<!-- HEADER -->
+<header>
+  <div class="header-inner">
+    <div class="logo-wrap">
+      <div class="logo-ph">CK<br><span style="font-size:9px">KIDS</span></div>
+    </div>
+    <div>
+      <div class="logo-text">Cuchi Koo <span>Kids</span></div>
+      <div class="logo-tagline">Cute styles, happy little ones 💙</div>
+      <div class="bulk-badge">⚡ Minimum bulk quantities apply</div>
+    </div>
+  </div>
+</header>
+
+<!-- CATALOGUE (rendered by JS) -->
+<div id="catalogue"></div>
+
+<!-- FOOTER -->
+<footer>
+  <h3>📍 Get in Touch</h3>
+  <div class="contact-cards">
+    <div class="contact-card">
+      <span class="contact-icon">📞</span>
+      <div>
+        <div class="contact-label">Phone / WhatsApp</div>
+        <a class="contact-value" href="tel:+917827156645">+91 78271 56645</a>
+      </div>
+    </div>
+    <div class="contact-card">
+      <span class="contact-icon">📸</span>
+      <div>
+        <div class="contact-label">Instagram</div>
+        <a class="contact-value" href="https://www.instagram.com/cuchikoo.kids" target="_blank" rel="noopener">@cuchikoo.kids</a>
+      </div>
+    </div>
+    <div class="contact-card">
+      <span class="contact-icon">📦</span>
+      <div>
+        <div class="contact-label">Orders</div>
+        <a class="contact-value" href="https://wa.me/917827156645?text=Hi!%20I'd%20like%20to%20know%20more%20about%20bulk%20orders." target="_blank" rel="noopener">WhatsApp us for bulk orders</a>
+      </div>
+    </div>
+  </div>
+  <p class="footer-note">© 2025 Cuchi Koo Kids. All rights reserved.<br>Minimum bulk quantities apply on all products.</p>
+</footer>
+
+<!-- ADMIN FAB -->
+<button class="admin-fab" onclick="openAdmin()" title="Manage Products">✏️</button>
+
+<!-- ADMIN PANEL -->
+<div class="admin-overlay" id="adminOverlay" onclick="overlayClick(event)">
+  <div class="admin-sheet">
+    <div class="admin-header">
+      <h2>⚙️ Manage Products</h2>
+      <button class="btn-close-admin" onclick="closeAdmin()">✕</button>
+    </div>
+    <div class="admin-tabs">
+      <button class="admin-tab active" onclick="switchTab('add',this)">➕ Add Product</button>
+      <button class="admin-tab" onclick="switchTab('manage',this)">🗂️ Edit / Delete</button>
+    </div>
+
+    <!-- ADD TAB -->
+    <div id="tab-add" class="admin-body">
+      <label>Product Name *</label>
+      <input type="text" id="f-name" placeholder="e.g. Floral Frock – Pink (2–3 yr)" />
+
+      <label>Price Band *</label>
+      <select id="f-price">
+        <option value="90">₹90 per piece</option>
+        <option value="100">₹100 per piece</option>
+        <option value="105">₹105 per piece</option>
+        <option value="110">₹110 per piece</option>
+      </select>
+
+      <label>Product Photo (optional)</label>
+      <input type="file" id="f-img" accept="image/*" onchange="previewImg()" />
+      <img id="img-preview" class="img-preview" alt="Preview" />
+
+      <label>Emoji Icon (shown if no photo)</label>
+      <input type="text" id="f-emoji" placeholder="👗" maxlength="4" value="👗" />
+
+      <button class="btn-add" onclick="addProduct()">✅ Add to Catalogue</button>
+      <div class="add-success" id="add-success">✅ Product added successfully!</div>
+    </div>
+
+    <!-- MANAGE TAB -->
+    <div id="tab-manage" style="display:none">
+      <div class="manage-filter">
+        <select id="filter-price" onchange="renderManage()">
+          <option value="all">All price bands</option>
+          <option value="90">₹90</option>
+          <option value="100">₹100</option>
+          <option value="105">₹105</option>
+          <option value="110">₹110</option>
+        </select>
+      </div>
+      <div class="manage-list" id="manage-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" onclick="closeLB()">
+  <button class="lb-close" onclick="closeLB()">✕</button>
+  <img id="lb-img" src="" alt="Product" onclick="event.stopPropagation()" />
+</div>
+
+<script>
+// ── STORAGE KEY ──
+const STORAGE_KEY = 'ckk_products_v2';
+
+// ── SEED DATA (shown only if localStorage is empty) ──
+const SEED = [
+  { id:'s1', name:'Floral Frock – Pink (1–2 yr)',      price:90,  emoji:'👗', img:'' },
+  { id:'s2', name:'Dino Print Tee – Blue (2–3 yr)',    price:90,  emoji:'👕', img:'' },
+  { id:'s3', name:'Stripe Romper – Yellow (0–1 yr)',   price:90,  emoji:'🩱', img:'' },
+  { id:'s4', name:'Star Pyjama Set – White (3–4 yr)',  price:90,  emoji:'🧤', img:'' },
+  { id:'s5', name:'Butterfly Dress – Purple (2–3 yr)', price:100, emoji:'👗', img:'' },
+  { id:'s6', name:'Summer Short Set – Orange (4–5 yr)',price:100, emoji:'🩲', img:'' },
+  { id:'s7', name:'Rainbow Hoodie – Red (3–4 yr)',     price:100, emoji:'👚', img:'' },
+  { id:'s8', name:'Sports Tracksuit – Navy (5–6 yr)',  price:100, emoji:'🎽', img:'' },
+  { id:'s9', name:'Boho Skirt Set – Mint (3–5 yr)',    price:105, emoji:'👗', img:'' },
+  { id:'s10',name:'Winter Cardigan – Cream (2–4 yr)',  price:105, emoji:'🧣', img:'' },
+  { id:'s11',name:'Ethnic Lehenga – Red (2–4 yr)',     price:110, emoji:'👗', img:'' },
+  { id:'s12',name:'Festive Kurta Set – Gold (3–5 yr)', price:110, emoji:'🩱', img:'' },
+  { id:'s13',name:'Party Gown – Peach (4–6 yr)',       price:110, emoji:'🎀', img:'' },
+  { id:'s14',name:'Newborn Gift Set – White (0–3 m)',  price:110, emoji:'👶', img:'' },
+];
+
+// ── LOAD / SAVE ──
+function load() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    return raw ? JSON.parse(raw) : null;
+  } catch(e) { return null; }
+}
+function save(products) {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(products)); } catch(e) {}
+}
+let products = load() || JSON.parse(JSON.stringify(SEED));
+
+// ── BAND CONFIG ──
+const BANDS = [
+  { price:90,  label:'₹90 Range',  cls:'band-90'  },
+  { price:100, label:'₹100 Range', cls:'band-100' },
+  { price:105, label:'₹105 Range', cls:'band-105' },
+  { price:110, label:'₹110 Range', cls:'band-110' },
+];
+const BG = {
+  90:  'background:linear-gradient(135deg,#fff0f6,#ffd6ec)',
+  100: 'background:linear-gradient(135deg,#e8f9f7,#b2ebf2)',
+  105: 'background:linear-gradient(135deg,#f3eeff,#d8c4ff)',
+  110: 'background:linear-gradient(135deg,#fff7e6,#ffe0b2)',
+};
+
+// ── WATERMARK SNIPPET ──
+const WM = `<div class="watermark"><span class="wm-text t">Cuchi Koo Kids</span><span class="wm-text m">Cuchi Koo Kids</span><span class="wm-text b">Cuchi Koo Kids</span></div>`;
+
+// ── WA LINK ──
+function waLink(name, price) {
+  const msg = encodeURIComponent(`Hi! I'd like to order this product: ${name} — Price: ₹${price} per piece. Please share more details. Thank you!`);
+  return `https://wa.me/917827156645?text=${msg}`;
+}
+
+// ── RENDER CATALOGUE ──
+function renderCatalogue() {
+  const cat = document.getElementById('catalogue');
+  let html = '';
+  BANDS.forEach(band => {
+    const items = products.filter(p => p.price === band.price);
+    html += `<section class="${band.cls}">
+      <div class="section-head">
+        <h2>${band.label}</h2>
+        <span class="pill">₹${band.price} / pc</span>
+        <div class="divider"></div>
+      </div>`;
+    if (items.length === 0) {
+      html += `<p class="section-empty">No products yet — add some! ✏️</p>`;
+    } else {
+      html += `<div class="grid">`;
+      items.forEach(p => {
+        const imgHtml = p.img
+          ? `<img src="${p.img}" alt="${escHtml(p.name)}" loading="lazy" onclick="openLB('${p.id}')" />`
+          : `<div class="card-ph" style="${BG[p.price]}">${p.emoji}</div>`;
+        html += `<div class="card" id="card-${p.id}">
+          <div class="card-img-wrap"${p.img ? '' : ` onclick=""`}>
+            ${imgHtml}${WM}
+          </div>
+          <div class="card-body">
+            <div class="card-name">${escHtml(p.name)}</div>
+            <div class="card-price">₹${p.price} / pc</div>
+            <a class="btn-order" href="${waLink(p.name,p.price)}" target="_blank" rel="noopener">🛒 Order Now</a>
+          </div>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+    html += `</section>`;
+  });
+  cat.innerHTML = html;
+}
+
+function escHtml(s) {
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── LIGHTBOX ──
+function openLB(id) {
+  const p = products.find(x => x.id === id);
+  if (!p || !p.img) return;
+  document.getElementById('lb-img').src = p.img;
+  document.getElementById('lightbox').classList.add('active');
+  document.body.style.overflow = 'hidden';
+}
+function closeLB() {
+  document.getElementById('lightbox').classList.remove('active');
+  document.body.style.overflow = '';
+}
+document.addEventListener('keydown', e => { if(e.key==='Escape'){ closeLB(); closeAdmin(); } });
+
+// ── ADMIN OPEN / CLOSE ──
+function openAdmin() {
+  document.getElementById('adminOverlay').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  renderManage();
+}
+function closeAdmin() {
+  document.getElementById('adminOverlay').classList.remove('open');
+  document.body.style.overflow = '';
+}
+function overlayClick(e) {
+  if (e.target === document.getElementById('adminOverlay')) closeAdmin();
+}
+
+// ── TABS ──
+function switchTab(tab, btn) {
+  document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('tab-add').style.display     = tab==='add'    ? 'block' : 'none';
+  document.getElementById('tab-manage').style.display  = tab==='manage' ? 'block' : 'none';
+  if (tab==='manage') renderManage();
+}
+
+// ── IMAGE PREVIEW ──
+let pendingImg = '';
+function previewImg() {
+  const file = document.getElementById('f-img').files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    pendingImg = e.target.result;
+    const prev = document.getElementById('img-preview');
+    prev.src = pendingImg;
+    prev.style.display = 'block';
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── ADD PRODUCT ──
+function addProduct() {
+  const name  = document.getElementById('f-name').value.trim();
+  const price = parseInt(document.getElementById('f-price').value);
+  const emoji = document.getElementById('f-emoji').value.trim() || '👗';
+
+  if (!name) { document.getElementById('f-name').focus(); return; }
+
+  const p = {
+    id:    'p' + Date.now(),
+    name,
+    price,
+    emoji,
+    img:   pendingImg,
+  };
+  products.push(p);
+  save(products);
+  renderCatalogue();
+
+  // reset form
+  document.getElementById('f-name').value = '';
+  document.getElementById('f-emoji').value = '👗';
+  document.getElementById('f-img').value = '';
+  document.getElementById('img-preview').style.display = 'none';
+  pendingImg = '';
+
+  const suc = document.getElementById('add-success');
+  suc.style.display = 'block';
+  setTimeout(() => { suc.style.display='none'; }, 2500);
+}
+
+// ── MANAGE / DELETE ──
+function renderManage() {
+  const filter = document.getElementById('filter-price').value;
+  const list   = document.getElementById('manage-list');
+  const items  = filter==='all' ? products : products.filter(p => p.price === parseInt(filter));
+
+  if (items.length === 0) {
+    list.innerHTML = '<p class="manage-empty">No products found.</p>';
+    return;
+  }
+
+  list.innerHTML = items.map(p => {
+    const thumb = p.img
+      ? `<div class="manage-thumb"><img src="${p.img}" alt="" /></div>`
+      : `<div class="manage-thumb" style="${BG[p.price]}">${p.emoji}</div>`;
+    return `<div class="manage-card" id="mc-${p.id}">
+      ${thumb}
+      <div class="manage-info">
+        <div class="manage-name">${escHtml(p.name)}</div>
+        <div class="manage-meta">Price band</div>
+        <div class="manage-price">₹${p.price} / pc</div>
+      </div>
+      <button class="btn-del" onclick="deleteProduct('${p.id}')">🗑️ Del</button>
+    </div>`;
+  }).join('');
+}
+
+function deleteProduct(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  if (!confirm(`Delete "${p.name}"?`)) return;
+  products = products.filter(x => x.id !== id);
+  save(products);
+  renderCatalogue();
+  renderManage();
+}
+
+// ── INIT ──
+renderCatalogue();
+</script>
+</body>
+</html>
